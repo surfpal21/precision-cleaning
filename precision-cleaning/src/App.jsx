@@ -461,7 +461,7 @@ export default function PrecisionCleaning() {
                 style={{ color: showMaintenance ? COLORS.gold : "rgba(255,255,255,0.75)", fontSize: 13, textTransform: "uppercase", letterSpacing: 1.5 }}>
                 Maintenance Plans
               </span>
-              <a href="tel:3052096985" className="gold-btn" style={{ padding: "10px 24px", fontSize: 13 }}>
+              <a href="tel:3052096985" className="gold-btn hide-mobile" style={{ padding: "10px 24px", fontSize: 13, whiteSpace: "nowrap" }}>
                 (305) 209-6985
               </a>
             </div>
