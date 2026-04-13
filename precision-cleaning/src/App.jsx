@@ -742,7 +742,7 @@ export default function PrecisionCleaning() {
 
               <FadeIn delay={0.2}>
                 <div style={{ textAlign: "center", marginTop: 52 }}>
-                  <a href="tel:3052096985" className="gold-btn" style={{ fontSize: 15, padding: "16px 44px" }}>
+                  <a href="tel:3052096985" className="gold-btn" style={{ fontSize: "clamp(12px, 3vw, 15px)", padding: "14px clamp(16px, 4vw, 44px)", whiteSpace: "nowrap", maxWidth: "100%", boxSizing: "border-box" }}>
                     Get Results Like These — (305) 209-6985
                   </a>
                 </div>
