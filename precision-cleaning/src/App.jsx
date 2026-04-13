@@ -341,8 +341,8 @@ export default function PrecisionCleaning() {
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html { scroll-behavior: smooth; }
-        body { font-family: ${FONT.body}; color: ${COLORS.gray800}; background: ${COLORS.white}; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100vw; }
+        body { font-family: ${FONT.body}; color: ${COLORS.gray800}; background: ${COLORS.white}; -webkit-font-smoothing: antialiased; overflow-x: hidden; max-width: 100vw; }
 
         ::selection { background: ${COLORS.gold}; color: ${COLORS.white}; }
 
@@ -416,11 +416,13 @@ export default function PrecisionCleaning() {
           .hero-title { font-size: 36px !important; }
           .services-grid { grid-template-columns: 1fr !important; }
           .plans-grid { grid-template-columns: 1fr !important; }
-          .stats-row { flex-direction: column !important; gap: 24px !important; }
+          .why-grid { grid-template-columns: 1fr !important; }
+          .stats-row { flex-direction: column !important; gap: 24px !important; margin-bottom: 60px !important; }
           .stat-divider { width: 50px !important; height: 1px !important; }
           .nav-desktop { display: none !important; }
           .nav-mobile-toggle { display: flex !important; }
           .footer-grid { grid-template-columns: 1fr !important; }
+          .scroll-indicator { display: none !important; }
         }
 
         @media (min-width: 769px) {
@@ -429,7 +431,7 @@ export default function PrecisionCleaning() {
         }
       `}</style>
 
-      <div className="grain">
+      <div className="grain" style={{ overflowX: "hidden", maxWidth: "100vw" }}>
         {/* ─── NAVIGATION ─── */}
         <nav style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
@@ -498,9 +500,9 @@ export default function PrecisionCleaning() {
           overflow: "hidden",
         }}>
           {/* Decorative elements */}
-          <div style={{ position: "absolute", top: "10%", right: "5%", width: 400, height: 400, borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.08)` }} />
-          <div style={{ position: "absolute", top: "20%", right: "10%", width: 250, height: 250, borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.05)` }} />
-          <div style={{ position: "absolute", bottom: "15%", left: "-5%", width: 300, height: 300, borderRadius: "50%", background: `radial-gradient(circle, rgba(196, 148, 61, 0.06), transparent)` }} />
+          <div style={{ position: "absolute", top: "10%", right: "-5%", width: "min(400px, 50vw)", height: "min(400px, 50vw)", borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.08)` }} />
+          <div style={{ position: "absolute", top: "20%", right: "5%", width: "min(250px, 35vw)", height: "min(250px, 35vw)", borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.05)` }} />
+          <div style={{ position: "absolute", bottom: "15%", left: "-5%", width: "min(300px, 40vw)", height: "min(300px, 40vw)", borderRadius: "50%", background: `radial-gradient(circle, rgba(196, 148, 61, 0.06), transparent)` }} />
 
           {/* Gold accent line */}
           <div style={{ position: "absolute", left: 0, top: 0, width: 4, height: "100%", background: `linear-gradient(to bottom, transparent, ${COLORS.gold}, transparent)` }} />
@@ -579,7 +581,7 @@ export default function PrecisionCleaning() {
           </div>
 
           {/* Scroll indicator */}
-          <div style={{
+          <div className="scroll-indicator" style={{
             position: "absolute", bottom: 30, left: "50%", transform: "translateX(-50%)",
             display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: 0.4,
           }}>
@@ -589,8 +591,8 @@ export default function PrecisionCleaning() {
         </section>
 
         {/* ─── TAB SELECTOR BAR ─── */}
-        <section style={{ background: COLORS.white, borderBottom: `1px solid ${COLORS.gray200}`, position: "sticky", top: 72, zIndex: 100 }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, overflowX: "auto" }}>
+        <section style={{ background: COLORS.white, borderBottom: `1px solid ${COLORS.gray200}`, position: "sticky", top: 72, zIndex: 100, overflowX: "hidden" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
             {["residential", "commercial", "marine"].map((tab) => (
               <button key={tab} onClick={() => switchTab(tab)} style={{
                 padding: "16px 28px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
@@ -853,7 +855,7 @@ export default function PrecisionCleaning() {
               </div>
             </FadeIn>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
+            <div className="why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
               {[
                 { icon: "🏠", title: "Family-Owned & Local", desc: "We're your neighbors. Precision Cleaning is a Miami-born business that treats every home like our own." },
                 { icon: "⚡", title: "Same-Day Availability", desc: "Need it done today? We offer fast turnaround and same-day scheduling so your space is clean when you need it." },
