@@ -9,6 +9,7 @@ const COLORS = {
   navyMid: "#1A3A66",
   gold: "#C4943D",
   goldLight: "#D4A94E",
+  goldDark: "#8F6A2A",
   goldPale: "#F5ECD7",
   cream: "#FAF7F0",
   white: "#FFFFFF",
@@ -17,8 +18,6 @@ const COLORS = {
   gray400: "#ADB5BD",
   gray600: "#6C757D",
   gray800: "#343A40",
-  blue: "#2E6B9E",
-  blueLight: "#E8F1F8",
 };
 
 // ─── Fonts (loaded via Google Fonts link in HTML head) ───
@@ -27,6 +26,51 @@ const FONT = {
   body: "'DM Sans', sans-serif",
   accent: "'Cormorant Garamond', serif",
 };
+
+// ─── Shared SVG Icon Set (stroke-style, inherits currentColor) ───
+const ICON_PATHS = {
+  sofa: <><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3" /><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z" /><path d="M4 18v2" /><path d="M20 18v2" /></>,
+  layers: <><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
+  sparkles: <><path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" /><path d="M5 3v4" /><path d="M3 5h4" /><path d="M19 17v4" /><path d="M17 19h4" /></>,
+  rug: <><rect x="5" y="3" width="14" height="18" rx="1" /><path d="m12 8 3 4-3 4-3-4 3-4Z" /><path d="M5 6h14" /><path d="M5 18h14" /></>,
+  bed: <><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8" /><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /><path d="M12 4v6" /><path d="M2 18h20" /></>,
+  car: <><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10.5 15.8 7.7c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" /><circle cx="7" cy="17" r="2" /><path d="M9 17h6" /><circle cx="17" cy="17" r="2" /></>,
+  home: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" /><path d="M9 22V12h6v10" /></>,
+  building: <><rect x="4" y="2" width="16" height="20" rx="2" /><path d="M9 22v-4h6v4" /><path d="M8 6h.01" /><path d="M16 6h.01" /><path d="M12 6h.01" /><path d="M8 10h.01" /><path d="M16 10h.01" /><path d="M12 10h.01" /><path d="M8 14h.01" /><path d="M16 14h.01" /><path d="M12 14h.01" /></>,
+  store: <><path d="M3 9l1.5-5h15L21 9" /><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" /><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" /><path d="M9 21v-5h6v5" /></>,
+  bell: <><path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H3Z" /><path d="M20 16a8 8 0 1 0-16 0" /><path d="M12 4v4" /><path d="M10 4h4" /></>,
+  cross: <><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2Z" /></>,
+  utensils: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z" /><path d="M21 15v7" /></>,
+  hardhat: <><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2Z" /><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5" /><path d="M4 15v-3a6 6 0 0 1 6-6" /><path d="M14 6a6 6 0 0 1 6 6v3" /></>,
+  wind: <><path d="M9.6 4.6A2 2 0 1 1 11 8H2" /><path d="M12.6 19.4A2 2 0 1 0 14 16H2" /><path d="M17.7 7.7A2.5 2.5 0 1 1 19.5 12H2" /></>,
+  waves: <><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /></>,
+  anchor: <><circle cx="12" cy="5" r="3" /><path d="M12 22V8" /><path d="M5 12H2a10 10 0 0 0 20 0h-3" /></>,
+  shieldCheck: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="m9 12 2 2 4-4" /></>,
+  badgeCheck: <><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" /></>,
+  zap: <><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" /></>,
+  leaf: <><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></>,
+  homeHeart: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" /><path d="M12 17.2s-3.2-1.9-3.2-4c0-1.1.9-2 2-2 .7 0 1.2.5 1.2.5s.5-.5 1.2-.5c1.1 0 2 .9 2 2 0 2.1-3.2 4-3.2 4Z" /></>,
+  clipboard: <><rect x="8" y="2" width="8" height="4" rx="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /></>,
+  phone: <><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" /></>,
+  mail: <><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-10 6L2 7" /></>,
+  mapPin: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></>,
+  check: <><path d="M20 6 9 17l-5-5" /></>,
+  star: <><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" /></>,
+  arrowRight: <><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>,
+  chevronDown: <><path d="m6 9 6 6 6-6" /></>,
+};
+
+function Icon({ name, size = 24, strokeWidth = 1.8, filled = false, style }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+      fill={filled ? "currentColor" : "none"}
+      stroke={filled ? "none" : "currentColor"}
+      strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"
+      style={{ flexShrink: 0, display: "block", ...style }} aria-hidden="true" focusable="false">
+      {ICON_PATHS[name]}
+    </svg>
+  );
+}
 
 // ─── Service Data ───
 const SERVICE_DATA = {
@@ -38,37 +82,37 @@ const SERVICE_DATA = {
     },
     services: [
       {
-        icon: "🛋️",
+        icon: "sofa",
         title: "Upholstery Cleaning",
         description: "Deep extraction cleaning for sofas, chairs, sectionals, and ottomans. We remove embedded dirt, allergens, pet dander, and stains while preserving fabric integrity.",
         details: ["Fabric-specific treatment protocols", "Stain pre-treatment & odor neutralization", "Scotchgard protection available", "Safe for delicate & designer fabrics"],
       },
       {
-        icon: "🏠",
+        icon: "layers",
         title: "Carpet Deep Cleaning",
         description: "Hot water extraction and steam cleaning that reaches deep into carpet fibers, removing years of buildup, allergens, and bacteria.",
         details: ["Full room & whole-home packages", "Pet stain & odor specialty treatment", "High-traffic area restoration", "Hypoallergenic & eco-friendly options"],
       },
       {
-        icon: "✨",
+        icon: "sparkles",
         title: "Tile & Grout Restoration",
         description: "High-pressure cleaning and grout color sealing that makes tile floors, showers, and backsplashes look brand new again.",
         details: ["Kitchen & bathroom specialists", "Grout recoloring & sealing", "Natural stone safe methods", "Mold & mildew elimination"],
       },
       {
-        icon: "🪟",
+        icon: "rug",
         title: "Area Rug Cleaning",
         description: "Specialized care for Oriental, Persian, silk, and wool rugs. On-site or pickup service with full inspection and hand-finishing.",
         details: ["Fringe cleaning & repair", "Color testing & fiber analysis", "Moth & pest treatment", "Padding cleaning & replacement"],
       },
       {
-        icon: "🛏️",
+        icon: "bed",
         title: "Mattress Sanitization",
         description: "UV sanitization and deep extraction to remove dust mites, allergens, sweat, and stains from mattresses of all sizes.",
         details: ["Hypoallergenic treatment", "Stain & odor removal", "All mattress types accepted", "Same-day service available"],
       },
       {
-        icon: "🚗",
+        icon: "car",
         title: "Auto Interior Detailing",
         description: "Complete interior cleaning for your vehicle—seats, carpets, headliner, and trunk. Leather conditioning and fabric protection included.",
         details: ["Leather care & conditioning", "Carpet & floor mat deep clean", "Dashboard & console detailing", "Odor elimination treatment"],
@@ -110,37 +154,37 @@ const SERVICE_DATA = {
     },
     services: [
       {
-        icon: "🏢",
+        icon: "building",
         title: "Office Carpet Cleaning",
         description: "Low-moisture, fast-drying carpet cleaning designed for minimal business disruption. After-hours and weekend scheduling available.",
         details: ["Encapsulation & HWE methods", "Cubicle & open floor plans", "After-hours scheduling", "Fast-dry for next-day readiness"],
       },
       {
-        icon: "🏪",
+        icon: "store",
         title: "Retail Floor Care",
         description: "High-traffic tile, VCT, and carpet cleaning that keeps your retail space looking sharp and inviting for customers.",
         details: ["VCT stripping & waxing", "Tile & grout deep cleaning", "Carpet extraction & bonnet cleaning", "Entrance mat programs"],
       },
       {
-        icon: "🏨",
+        icon: "bell",
         title: "Hospitality Cleaning",
         description: "Hotel, Airbnb, and short-term rental cleaning with fast turnaround. Guest-ready results every time.",
         details: ["Room turnover cleaning", "Lobby & common area maintenance", "Upholstery & drapery service", "Odor treatment & sanitization"],
       },
       {
-        icon: "🏥",
+        icon: "cross",
         title: "Medical & Healthcare",
         description: "Sanitization-grade cleaning for medical offices, clinics, and wellness centers meeting healthcare facility standards.",
         details: ["EPA-registered disinfection", "Waiting room deep cleaning", "Exam room sanitization", "HIPAA-conscious service protocols"],
       },
       {
-        icon: "🍽️",
+        icon: "utensils",
         title: "Restaurant & Kitchen",
         description: "Degreasing, tile cleaning, and upholstery care for dining areas, kitchens, and bar spaces.",
         details: ["Kitchen tile degreasing", "Booth & banquette cleaning", "Bar area deep clean", "Health code compliance support"],
       },
       {
-        icon: "🏗️",
+        icon: "hardhat",
         title: "Post-Construction",
         description: "Final-phase cleaning for new builds and renovations—dust removal, surface cleaning, and floor finishing.",
         details: ["Construction dust extraction", "Window & surface cleaning", "Floor polishing & sealing", "Move-in ready preparation"],
@@ -182,37 +226,37 @@ const SERVICE_DATA = {
     },
     services: [
       {
-        icon: "🛋️",
+        icon: "sofa",
         title: "Salon Upholstery Cleaning",
         description: "Deep extraction cleaning for all salon cushions, settees, and cabin upholstery. We pull out salt, sweat, mildew, and embedded grime while protecting marine-grade fabrics.",
         details: ["Hot water extraction on all cushion types", "Salt & mineral deposit removal", "Mildew & musty odor elimination", "Fabric protection treatment applied"],
       },
       {
-        icon: "🧶",
+        icon: "layers",
         title: "Yacht Carpet Cleaning",
         description: "Full deep cleaning for salon carpets, stateroom flooring, and flybridge mats. We restore color, lift stains, and leave zero soapy residue behind.",
         details: ["Diesel, fish & bilge odor treatment", "Stain pre-treatment on every visit", "Fast-dry methods for quick turnaround", "All carpet types including berber & marine cut-pile"],
       },
       {
-        icon: "🪨",
+        icon: "rug",
         title: "Area Rug & Mat Cleaning",
         description: "On-site deep cleaning for cockpit mats, interior area rugs, and decorative rugs. We treat each piece based on its fiber and condition.",
         details: ["Color-safe cleaning for all rug types", "Non-skid backing preserved", "Fringe & edge cleaning", "UV damage & fading assessment"],
       },
       {
-        icon: "💨",
+        icon: "wind",
         title: "Mildew & Odor Removal",
         description: "Targeted treatment for that stubborn musty, mildewy smell that lives in cushions, carpet, and closed-up cabins. We don't mask it — we eliminate it at the source.",
         details: ["Enzyme-based odor neutralization", "Mildew spore extraction & treatment", "Bilge, diesel & fish odor elimination", "Preventative anti-mildew coating available"],
       },
       {
-        icon: "🛏️",
+        icon: "bed",
         title: "Cabin & Mattress Sanitization",
         description: "Deep cleaning for stateroom mattresses and bedding surfaces. Removes sweat, salt residue, mildew, and allergens so every night aboard feels fresh.",
         details: ["UV sanitization treatment", "Salt & moisture extraction", "All mattress sizes & types", "Odor neutralization included"],
       },
       {
-        icon: "🌊",
+        icon: "waves",
         title: "Pre-Charter & Post-Season Refresh",
         description: "Full interior soft-surface refresh before charter guests arrive or after a long season. Carpets, cushions, rugs, and cabins — all done in one visit.",
         details: ["Complete upholstery & carpet service", "Mold & mildew inspection included", "Charter-ready same-day turnaround", "Seasonal storage prep treatment"],
@@ -337,14 +381,12 @@ export default function PrecisionCleaning() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100vw; }
-        body { font-family: ${FONT.body}; color: ${COLORS.gray800}; background: ${COLORS.white}; -webkit-font-smoothing: antialiased; overflow-x: hidden; max-width: 100vw; }
+        html { scroll-behavior: smooth; overflow-x: clip; max-width: 100vw; }
+        body { font-family: ${FONT.body}; color: ${COLORS.gray800}; background: ${COLORS.white}; -webkit-font-smoothing: antialiased; overflow-x: clip; max-width: 100vw; }
 
-        ::selection { background: ${COLORS.gold}; color: ${COLORS.white}; }
+        ::selection { background: ${COLORS.gold}; color: ${COLORS.navy}; }
 
         /* Subtle grain overlay */
         .grain::before {
@@ -353,6 +395,7 @@ export default function PrecisionCleaning() {
           top: 0; left: 0; width: 100%; height: 100%;
           opacity: 0.03;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 256px 256px;
           pointer-events: none;
           z-index: 9999;
         }
@@ -366,13 +409,13 @@ export default function PrecisionCleaning() {
         .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(11, 29, 58, 0.12); }
 
         .plan-card { transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
-        .plan-card:hover { transform: translateY(-6px); }
-        .plan-card.popular { border: 2px solid ${COLORS.gold}; transform: scale(1.02); }
+        .plan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(11, 29, 58, 0.12); }
+        .plan-card.popular { transform: scale(1.02); }
         .plan-card.popular:hover { transform: scale(1.02) translateY(-6px); }
 
         .gold-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          padding: 14px 32px; background: ${COLORS.gold}; color: ${COLORS.white};
+          padding: 14px 32px; background: ${COLORS.gold}; color: ${COLORS.navy};
           font-family: ${FONT.body}; font-weight: 600; font-size: 15px;
           border: none; border-radius: 4px; cursor: pointer; letter-spacing: 0.5px;
           transition: all 0.3s ease; text-decoration: none;
@@ -383,7 +426,7 @@ export default function PrecisionCleaning() {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 14px 32px; background: transparent; color: ${COLORS.white};
           font-family: ${FONT.body}; font-weight: 600; font-size: 15px;
-          border: 2px solid rgba(255,255,255,0.4); border-radius: 4px; cursor: pointer;
+          border: 2px solid rgba(255,255,255,0.4); border-radius: 4px; cursor: pointer; letter-spacing: 0.5px;
           transition: all 0.3s ease; text-decoration: none;
         }
         .outline-btn:hover { border-color: ${COLORS.white}; background: rgba(255,255,255,0.1); }
@@ -392,10 +435,16 @@ export default function PrecisionCleaning() {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 14px 32px; background: ${COLORS.navy}; color: ${COLORS.white};
           font-family: ${FONT.body}; font-weight: 600; font-size: 15px;
-          border: none; border-radius: 4px; cursor: pointer;
+          border: none; border-radius: 4px; cursor: pointer; letter-spacing: 0.5px;
           transition: all 0.3s ease; text-decoration: none;
         }
-        .dark-btn:hover { background: ${COLORS.navyLight}; transform: translateY(-2px); }
+        .dark-btn:hover { background: ${COLORS.navyLight}; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(11, 29, 58, 0.3); }
+
+        .gold-btn:focus-visible, .outline-btn:focus-visible, .dark-btn:focus-visible { outline: 2px solid ${COLORS.goldLight}; outline-offset: 3px; }
+        .gold-btn:active, .dark-btn:active { transform: translateY(0); }
+        .plan-pill:hover { border-color: ${COLORS.navy} !important; }
+        .footer-link { transition: color 0.3s ease; }
+        .footer-link:hover { color: rgba(255,255,255,0.9) !important; }
 
         .stat-divider { width: 1px; height: 50px; background: rgba(255,255,255,0.2); }
 
@@ -414,31 +463,34 @@ export default function PrecisionCleaning() {
           .hide-mobile { display: none !important; }
           .show-mobile { display: block !important; }
           .hero-title { font-size: 36px !important; }
+          .section-h2 { font-size: 32px !important; }
           .services-grid { grid-template-columns: 1fr !important; }
           .plans-grid { grid-template-columns: 1fr !important; }
           .why-grid { grid-template-columns: 1fr !important; }
+          .results-grid { grid-template-columns: 1fr !important; }
           .stats-row { flex-direction: column !important; gap: 24px !important; margin-bottom: 60px !important; }
           .stat-divider { width: 50px !important; height: 1px !important; }
-          .nav-desktop { display: none !important; }
-          .nav-mobile-toggle { display: flex !important; }
           .footer-grid { grid-template-columns: 1fr !important; }
           .scroll-indicator { display: none !important; }
         }
 
-        @media (min-width: 769px) {
-          .nav-mobile-toggle { display: none !important; }
-          .mobile-menu { display: none !important; }
+        .nav-mobile-toggle { display: none !important; }
+        .mobile-menu { display: none !important; }
+        @media (max-width: 960px) {
+          .nav-desktop { display: none !important; }
+          .nav-mobile-toggle { display: flex !important; }
+          .mobile-menu { display: block !important; }
         }
       `}</style>
 
-      <div className="grain" style={{ overflowX: "hidden", maxWidth: "100vw" }}>
+      <div className="grain">
         {/* ─── NAVIGATION ─── */}
         <nav style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-          background: scrolled ? "rgba(11, 29, 58, 0.97)" : "transparent",
-          backdropFilter: scrolled ? "blur(20px)" : "none",
+          background: scrolled || mobileMenuOpen ? "rgba(11, 29, 58, 0.97)" : "transparent",
+          backdropFilter: scrolled || mobileMenuOpen ? "blur(20px)" : "none",
           transition: "all 0.4s ease",
-          borderBottom: scrolled ? `1px solid rgba(196, 148, 61, 0.15)` : "1px solid transparent",
+          borderBottom: scrolled || mobileMenuOpen ? `1px solid rgba(196, 148, 61, 0.15)` : "1px solid transparent",
         }}>
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 100 }}>
             {/* Logo */}
@@ -507,7 +559,7 @@ export default function PrecisionCleaning() {
           {/* Gold accent line */}
           <div style={{ position: "absolute", left: 0, top: 0, width: 4, height: "100%", background: `linear-gradient(to bottom, transparent, ${COLORS.gold}, transparent)` }} />
 
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 24px 48px", width: "100%", position: "relative", zIndex: 2 }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "150px 24px 110px", width: "100%", position: "relative", zIndex: 2 }}>
             <FadeIn>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
                 <div style={{ width: 40, height: 1, background: COLORS.gold }} />
@@ -537,7 +589,7 @@ export default function PrecisionCleaning() {
                 <button className="gold-btn" onClick={() => {
                   document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
                 }}>
-                  Explore Services →
+                  Explore Services <Icon name="arrowRight" size={16} strokeWidth={2} />
                 </button>
                 <a href="tel:3052096985" className="outline-btn">
                   Get a Free Quote
@@ -591,18 +643,20 @@ export default function PrecisionCleaning() {
         </section>
 
         {/* ─── TAB SELECTOR BAR ─── */}
-        <section style={{ background: COLORS.white, borderBottom: `1px solid ${COLORS.gray200}`, position: "sticky", top: 72, zIndex: 100, overflowX: "hidden" }}>
+        <section style={{ background: COLORS.white, borderBottom: `1px solid ${COLORS.gray200}`, position: "sticky", top: 100, zIndex: 100, overflowX: "hidden" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
             {["residential", "commercial", "marine"].map((tab) => (
               <button key={tab} onClick={() => switchTab(tab)} style={{
                 padding: "16px 28px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
                 textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer",
                 background: "none", border: "none",
-                color: activeTab === tab ? COLORS.navy : COLORS.gray400,
+                color: activeTab === tab ? COLORS.navy : COLORS.gray600,
                 borderBottom: activeTab === tab ? `3px solid ${COLORS.gold}` : "3px solid transparent",
                 transition: "all 0.3s ease", whiteSpace: "nowrap",
+                display: "inline-flex", alignItems: "center", gap: 8,
               }}>
-                {tab === "residential" ? "🏠 Residential" : tab === "commercial" ? "🏢 Commercial" : "⛵ Marine"}
+                <Icon name={tab === "residential" ? "home" : tab === "commercial" ? "building" : "anchor"} size={15} strokeWidth={2} />
+                {tab === "residential" ? "Residential" : tab === "commercial" ? "Commercial" : "Marine"}
               </button>
             ))}
             <div style={{ flex: 1 }} />
@@ -610,29 +664,31 @@ export default function PrecisionCleaning() {
               padding: "16px 28px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
               textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer",
               background: showMaintenance ? COLORS.goldPale : "none", border: "none",
-              color: showMaintenance ? COLORS.gold : COLORS.gray400,
+              color: showMaintenance ? COLORS.navy : COLORS.gray600,
               borderBottom: showMaintenance ? `3px solid ${COLORS.gold}` : "3px solid transparent",
               transition: "all 0.3s ease", borderRadius: showMaintenance ? "4px 4px 0 0" : 0,
+              display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
             }}>
-              📋 Maintenance Plans
+              <Icon name="clipboard" size={15} strokeWidth={2} />
+              Maintenance Plans
             </button>
           </div>
         </section>
 
         {/* ─── SERVICES SECTION ─── */}
         {!showMaintenance && (
-          <section id="services" style={{ background: COLORS.cream, padding: "80px 0" }}>
+          <section id="services" style={{ background: COLORS.cream, padding: "80px 0", scrollMarginTop: 160 }}>
             <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
               <FadeIn>
                 <div style={{ textAlign: "center", marginBottom: 60 }}>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
-                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>
+                    <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>
                       {data.hero.tagline}
                     </span>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
                   </div>
-                  <h2 style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
+                  <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
                     What We Do
                   </h2>
                   <p style={{ fontFamily: FONT.accent, fontSize: 18, color: COLORS.gray600, marginTop: 12, fontStyle: "italic" }}>
@@ -647,11 +703,13 @@ export default function PrecisionCleaning() {
                     <div className="service-card"
                       onClick={() => setExpandedService(expandedService === i ? null : i)}
                       style={{
-                        background: COLORS.white, borderRadius: 8, padding: 32, cursor: "pointer",
+                        background: COLORS.white, borderRadius: 12, padding: 32, cursor: "pointer",
                         border: expandedService === i ? `1px solid ${COLORS.gold}` : `1px solid ${COLORS.gray200}`,
                         height: "100%", display: "flex", flexDirection: "column",
                       }}>
-                      <div style={{ fontSize: 36, marginBottom: 16 }}>{service.icon}</div>
+                      <div style={{ width: 56, height: 56, borderRadius: 14, background: COLORS.goldPale, color: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                        <Icon name={service.icon} size={28} strokeWidth={1.6} />
+                      </div>
                       <h3 style={{ fontFamily: FONT.display, fontSize: 22, fontWeight: 600, color: COLORS.navy, marginBottom: 12 }}>
                         {service.title}
                       </h3>
@@ -668,15 +726,15 @@ export default function PrecisionCleaning() {
                         <div style={{ paddingTop: 16, borderTop: `1px solid ${COLORS.gray200}` }}>
                           {service.details.map((detail, j) => (
                             <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
-                              <span style={{ color: COLORS.gold, fontSize: 14, marginTop: 2, flexShrink: 0 }}>✓</span>
+                              <span style={{ color: COLORS.goldDark, marginTop: 3, flexShrink: 0, display: "inline-flex" }}><Icon name="check" size={13} strokeWidth={3} /></span>
                               <span style={{ fontFamily: FONT.body, fontSize: 13, color: COLORS.gray600, lineHeight: 1.5 }}>{detail}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, color: COLORS.gold, fontSize: 13, fontWeight: 500 }}>
-                        {expandedService === i ? "Show less" : "View details"} <span style={{ transition: "transform 0.3s", transform: expandedService === i ? "rotate(180deg)" : "none" }}>↓</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, color: COLORS.goldDark, fontSize: 13, fontWeight: 600, letterSpacing: 0.3 }}>
+                        {expandedService === i ? "Show less" : "View details"} <span style={{ display: "inline-flex", transition: "transform 0.3s", transform: expandedService === i ? "rotate(180deg)" : "none" }}><Icon name="chevronDown" size={14} strokeWidth={2} /></span>
                       </div>
                     </div>
                   </FadeIn>
@@ -688,25 +746,25 @@ export default function PrecisionCleaning() {
 
         {/* ─── BEFORE / AFTER RESULTS ─── */}
         {!showMaintenance && activeTab !== "marine" && (
-          <section style={{ background: COLORS.navy, padding: "90px 0" }}>
+          <section style={{ background: COLORS.navy, padding: "80px 0" }}>
             <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
               <FadeIn>
-                <div style={{ textAlign: "center", marginBottom: 56 }}>
+                <div style={{ textAlign: "center", marginBottom: 60 }}>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
-                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Real Results</span>
+                    <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Real Results</span>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
                   </div>
-                  <h2 style={{ fontFamily: FONT.display, fontSize: 42, fontWeight: 700, color: COLORS.white, lineHeight: 1.15, margin: 0 }}>
+                  <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 42, fontWeight: 700, color: COLORS.white, lineHeight: 1.15, margin: 0 }}>
                     See the Difference
                   </h2>
-                  <p style={{ fontFamily: FONT.accent, fontSize: 19, color: "rgba(255,255,255,0.45)", marginTop: 14, fontStyle: "italic" }}>
+                  <p style={{ fontFamily: FONT.accent, fontSize: 19, color: "rgba(255,255,255,0.6)", marginTop: 14, fontStyle: "italic" }}>
                     Actual before &amp; after photos from our jobs
                   </p>
                 </div>
               </FadeIn>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, alignItems: "stretch" }}>
+              <div className="results-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, alignItems: "stretch" }}>
 
                 {/* Carpet */}
                 <FadeIn delay={0} style={{ height: "100%" }}>
@@ -714,11 +772,12 @@ export default function PrecisionCleaning() {
                     <img
                       src="/images/carpet-comparison.jpg"
                       alt="Carpet before and after deep cleaning"
+                      loading="lazy" decoding="async"
                       style={{ width: "100%", display: "block", objectFit: "cover", flex: 1 }}
                     />
                     <div style={{ background: COLORS.navyLight, padding: "16px 24px" }}>
-                      <div style={{ fontFamily: FONT.display, fontSize: 17, fontWeight: 600, color: COLORS.white }}>Carpet Deep Cleaning</div>
-                      <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>Stains, odor & allergens fully extracted</div>
+                      <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.white }}>Carpet Deep Cleaning</div>
+                      <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>Stains, odor & allergens fully extracted</div>
                     </div>
                   </div>
                 </FadeIn>
@@ -729,11 +788,12 @@ export default function PrecisionCleaning() {
                     <img
                       src="/images/tile-comparison.jpg"
                       alt="Tile and grout before and after cleaning"
+                      loading="lazy" decoding="async"
                       style={{ width: "100%", display: "block", objectFit: "cover", flex: 1 }}
                     />
                     <div style={{ background: COLORS.navyLight, padding: "16px 24px" }}>
-                      <div style={{ fontFamily: FONT.display, fontSize: 17, fontWeight: 600, color: COLORS.white }}>Tile &amp; Grout Restoration</div>
-                      <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>Grout restored to bright white — no replacement needed</div>
+                      <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.white }}>Tile &amp; Grout Restoration</div>
+                      <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>Grout restored to bright white — no replacement needed</div>
                     </div>
                   </div>
                 </FadeIn>
@@ -742,7 +802,7 @@ export default function PrecisionCleaning() {
 
               <FadeIn delay={0.2}>
                 <div style={{ textAlign: "center", marginTop: 52 }}>
-                  <a href="tel:3052096985" className="gold-btn" style={{ fontSize: "clamp(12px, 3vw, 15px)", padding: "14px clamp(16px, 4vw, 44px)", whiteSpace: "nowrap", maxWidth: "100%", boxSizing: "border-box" }}>
+                  <a href="tel:3052096985" className="gold-btn" style={{ fontSize: "clamp(13px, 3vw, 16px)", padding: "14px clamp(16px, 4vw, 44px)", whiteSpace: "nowrap", maxWidth: "100%", boxSizing: "border-box" }}>
                     Get Results Like These — (305) 209-6985
                   </a>
                 </div>
@@ -760,29 +820,29 @@ export default function PrecisionCleaning() {
                 <div style={{ textAlign: "center", marginBottom: 48 }}>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
-                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>
+                    <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>
                       {activeTab} PLANS
                     </span>
                     <div style={{ width: 30, height: 1, background: COLORS.gold }} />
                   </div>
-                  <h2 style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
+                  <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
                     {data.maintenance.title}
                   </h2>
-                  <p style={{ fontFamily: FONT.accent, fontSize: 18, color: COLORS.gray600, marginTop: 12, fontStyle: "italic", maxWidth: 500, margin: "12px auto 0" }}>
+                  <p style={{ fontFamily: FONT.accent, fontSize: 18, color: COLORS.gray600, fontStyle: "italic", maxWidth: 500, margin: "12px auto 0" }}>
                     {data.maintenance.subtitle}
                   </p>
                 </div>
               </FadeIn>
 
               {/* Plan selector tabs */}
-              <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 48 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginBottom: 48 }}>
                 {["residential", "commercial", "marine"].map((tab) => (
-                  <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                  <button key={tab} className="plan-pill" onClick={() => setActiveTab(tab)} style={{
                     padding: "10px 24px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
                     background: activeTab === tab ? COLORS.navy : COLORS.white,
                     color: activeTab === tab ? COLORS.white : COLORS.gray600,
                     border: `1px solid ${activeTab === tab ? COLORS.navy : COLORS.gray200}`,
-                    borderRadius: 100, cursor: "pointer", transition: "all 0.3s",
+                    borderRadius: 4, cursor: "pointer", transition: "all 0.3s",
                     textTransform: "uppercase", letterSpacing: 1,
                   }}>
                     {tab}
@@ -801,10 +861,11 @@ export default function PrecisionCleaning() {
                     }}>
                       {plan.popular && (
                         <div style={{
-                          background: COLORS.gold, color: COLORS.white, textAlign: "center",
+                          background: COLORS.gold, color: COLORS.navy, textAlign: "center",
                           padding: "6px 0", fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase",
-                          flexShrink: 0,
+                          flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                         }}>
+                          <Icon name="star" size={12} filled />
                           Most Popular
                         </div>
                       )}
@@ -812,7 +873,7 @@ export default function PrecisionCleaning() {
                         <h3 style={{ fontFamily: FONT.display, fontSize: 26, fontWeight: 700, color: COLORS.navy, marginBottom: 4 }}>
                           {plan.name}
                         </h3>
-                        <div style={{ fontFamily: FONT.body, fontSize: 13, color: COLORS.gold, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
+                        <div style={{ fontFamily: FONT.body, fontSize: 13, color: COLORS.goldDark, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
                           {plan.frequency}
                         </div>
                         <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.navy, marginBottom: 24, paddingBottom: 24, borderBottom: `1px solid ${COLORS.gray200}` }}>
@@ -821,7 +882,7 @@ export default function PrecisionCleaning() {
                         <div style={{ flex: 1 }}>
                           {plan.features.map((feature, j) => (
                             <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
-                              <span style={{ color: COLORS.gold, fontSize: 16, marginTop: 1, flexShrink: 0 }}>✓</span>
+                              <span style={{ color: COLORS.goldDark, marginTop: 2, flexShrink: 0, display: "inline-flex" }}><Icon name="check" size={16} strokeWidth={2.2} /></span>
                               <span style={{ fontFamily: FONT.body, fontSize: 14, color: COLORS.gray600, lineHeight: 1.5 }}>{feature}</span>
                             </div>
                           ))}
@@ -846,10 +907,10 @@ export default function PrecisionCleaning() {
               <div style={{ textAlign: "center", marginBottom: 60 }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                   <div style={{ width: 30, height: 1, background: COLORS.gold }} />
-                  <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Why Choose Us</span>
+                  <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Why Choose Us</span>
                   <div style={{ width: 30, height: 1, background: COLORS.gold }} />
                 </div>
-                <h2 style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy }}>
+                <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
                   Built on Trust, Backed by Results
                 </h2>
               </div>
@@ -857,15 +918,17 @@ export default function PrecisionCleaning() {
 
             <div className="why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
               {[
-                { icon: "🏠", title: "Family-Owned & Local", desc: "We're your neighbors. Precision Cleaning is a Miami-born business that treats every home like our own." },
-                { icon: "⚡", title: "Same-Day Availability", desc: "Need it done today? We offer fast turnaround and same-day scheduling so your space is clean when you need it." },
-                { icon: "✅", title: "Licensed & Insured", desc: "Fully licensed, fully insured, and backed by a satisfaction guarantee on every single job. No exceptions." },
-                { icon: "🌿", title: "Eco-Friendly Options", desc: "We use environmentally conscious products that are safe for families, pets, and marine environments." },
+                { icon: "homeHeart", title: "Family-Owned & Local", desc: "We're your neighbors. Precision Cleaning is a Miami-born business that treats every home like our own." },
+                { icon: "zap", title: "Same-Day Availability", desc: "Need it done today? We offer fast turnaround and same-day scheduling so your space is clean when you need it." },
+                { icon: "shieldCheck", title: "Licensed & Insured", desc: "Fully licensed, fully insured, and backed by a satisfaction guarantee on every single job. No exceptions." },
+                { icon: "leaf", title: "Eco-Friendly Options", desc: "We use environmentally conscious products that are safe for families, pets, and marine environments." },
               ].map((item, i) => (
                 <FadeIn key={i} delay={i * 0.1} style={{ height: "100%" }}>
-                  <div style={{ height: "100%", boxSizing: "border-box", textAlign: "center", padding: 32, borderRadius: 8, border: `1px solid ${COLORS.gray200}`, background: COLORS.gray100 }}>
-                    <div style={{ fontSize: 40, marginBottom: 16 }}>{item.icon}</div>
-                    <h3 style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.navy, marginBottom: 12 }}>{item.title}</h3>
+                  <div style={{ height: "100%", boxSizing: "border-box", textAlign: "center", padding: 32, borderRadius: 12, border: `1px solid ${COLORS.gray200}`, background: COLORS.gray100 }}>
+                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: COLORS.goldPale, color: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+                      <Icon name={item.icon} size={30} strokeWidth={1.6} />
+                    </div>
+                    <h3 style={{ fontFamily: FONT.display, fontSize: 22, fontWeight: 600, color: COLORS.navy, marginBottom: 12 }}>{item.title}</h3>
                     <p style={{ fontFamily: FONT.body, fontSize: 14, color: COLORS.gray600, lineHeight: 1.7 }}>{item.desc}</p>
                   </div>
                 </FadeIn>
@@ -876,35 +939,39 @@ export default function PrecisionCleaning() {
 
         {/* ─── REVIEWS ─── */}
         <section style={{ background: COLORS.cream, padding: "80px 0", overflow: "hidden" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", marginBottom: 40 }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", marginBottom: 60 }}>
             <FadeIn>
               <div style={{ textAlign: "center" }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                   <div style={{ width: 30, height: 1, background: COLORS.gold }} />
-                  <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Testimonials</span>
+                  <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Testimonials</span>
                   <div style={{ width: 30, height: 1, background: COLORS.gold }} />
                 </div>
-                <h2 style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy }}>
+                <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
                   Real Reviews From Real Customers
                 </h2>
               </div>
             </FadeIn>
           </div>
 
-          <div style={{ overflow: "hidden" }}>
+          <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(to right, transparent, black 64px, black calc(100% - 64px), transparent)", maskImage: "linear-gradient(to right, transparent, black 64px, black calc(100% - 64px), transparent)" }}>
             <div className="review-track">
               {[...REVIEWS, ...REVIEWS].map((review, i) => (
                 <div key={i} style={{
-                  minWidth: 360, maxWidth: 360, background: COLORS.white, borderRadius: 8,
+                  minWidth: "min(360px, calc(100vw - 48px))", maxWidth: "min(360px, calc(100vw - 48px))", background: COLORS.white, borderRadius: 12,
                   padding: 32, border: `1px solid ${COLORS.gray200}`, flexShrink: 0,
                 }}>
-                  <div style={{ color: COLORS.gold, fontSize: 20, marginBottom: 16, letterSpacing: 2 }}>★★★★★</div>
+                  <div role="img" aria-label={`${review.stars} out of 5 stars`} style={{ color: COLORS.gold, display: "flex", alignItems: "center", gap: 3, marginBottom: 16 }}>
+                    {Array.from({ length: review.stars }).map((_, s) => (
+                      <Icon key={s} name="star" size={18} filled />
+                    ))}
+                  </div>
                   <p style={{ fontFamily: FONT.accent, fontSize: 16, color: COLORS.gray800, lineHeight: 1.7, fontStyle: "italic", marginBottom: 20 }}>
                     "{review.text}"
                   </p>
                   <div style={{ borderTop: `1px solid ${COLORS.gray200}`, paddingTop: 16 }}>
                     <div style={{ fontFamily: FONT.body, fontSize: 14, fontWeight: 600, color: COLORS.navy }}>{review.author}</div>
-                    <div style={{ fontFamily: FONT.body, fontSize: 12, color: COLORS.gray400 }}>{review.location}</div>
+                    <div style={{ fontFamily: FONT.body, fontSize: 12, color: COLORS.gray600 }}>{review.location}</div>
                   </div>
                 </div>
               ))}
@@ -920,7 +987,7 @@ export default function PrecisionCleaning() {
           <div style={{ position: "absolute", top: "50%", right: "10%", width: 300, height: 300, borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.1)`, transform: "translateY(-50%)" }} />
           <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 24px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <FadeIn>
-              <h2 style={{ fontFamily: FONT.display, fontSize: 42, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, marginBottom: 16 }}>
+              <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, marginBottom: 16 }}>
                 Ready for a Cleaner Space?
               </h2>
               <p style={{ fontFamily: FONT.accent, fontSize: 20, color: "rgba(255,255,255,0.6)", fontStyle: "italic", marginBottom: 40 }}>
@@ -930,9 +997,24 @@ export default function PrecisionCleaning() {
                 <a href="tel:3052096985" className="gold-btn" style={{ fontSize: 16, padding: "16px 36px" }}>
                   Call (305) 209-6985
                 </a>
-                <a href="mailto:info@precisioncleaning.com" className="outline-btn" style={{ fontSize: 16, padding: "16px 36px" }}>
+                <a href="mailto:ethan@precisioncleaning.com" className="outline-btn" style={{ fontSize: 16, padding: "16px 36px" }}>
                   Send an Email
                 </a>
+              </div>
+              <div style={{ display: "flex", gap: 14, justifyContent: "center", alignItems: "center", flexWrap: "wrap", marginTop: 36 }}>
+                {[
+                  { icon: "shieldCheck", label: "Licensed & Insured" },
+                  { icon: "badgeCheck", label: "Satisfaction Guaranteed" },
+                  { icon: "star", label: "5-Star Rated", filled: true },
+                  { icon: "leaf", label: "Eco-Friendly" },
+                ].map((badge) => (
+                  <span key={badge.label} style={{ display: "inline-flex", alignItems: "center", gap: 7, color: "rgba(255,255,255,0.75)", padding: "0 4px" }}>
+                    <span style={{ color: COLORS.goldLight, display: "inline-flex" }}>
+                      <Icon name={badge.icon} size={15} strokeWidth={1.8} filled={badge.filled} />
+                    </span>
+                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, letterSpacing: 0.5, textTransform: "uppercase" }}>{badge.label}</span>
+                  </span>
+                ))}
               </div>
             </FadeIn>
           </div>
@@ -947,16 +1029,26 @@ export default function PrecisionCleaning() {
                 <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
                   <img src={logoImg} alt="Precision Cleaning Services" style={{ height: 68, width: "auto" }} />
                 </div>
-                <p style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: 300 }}>
+                <p style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 300 }}>
                   Family-owned and locally operated, delivering same-day deep cleaning across Miami since 2011.
                 </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginTop: 20, color: "rgba(255,255,255,0.6)" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ color: COLORS.goldLight, display: "inline-flex" }}><Icon name="shieldCheck" size={14} strokeWidth={2} /></span>
+                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>Licensed & Insured</span>
+                  </span>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ color: COLORS.goldLight, display: "inline-flex" }}><Icon name="star" size={14} filled /></span>
+                    <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>5-Star Rated</span>
+                  </span>
+                </div>
               </div>
 
               {/* Services */}
               <div>
                 <h4 style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Services</h4>
                 {["Residential", "Commercial", "Marine"].map((s) => (
-                  <div key={s} style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 10, cursor: "pointer" }}
+                  <div key={s} className="footer-link" style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10, cursor: "pointer" }}
                     onClick={() => switchTab(s.toLowerCase())}>{s}</div>
                 ))}
               </div>
@@ -965,26 +1057,35 @@ export default function PrecisionCleaning() {
               <div>
                 <h4 style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Company</h4>
                 {["About Us", "Reviews", "Service Areas", "Careers"].map((s) => (
-                  <div key={s} style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>{s}</div>
+                  <div key={s} style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10 }}>{s}</div>
                 ))}
               </div>
 
               {/* Contact */}
               <div>
                 <h4 style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Contact</h4>
-                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>📞 (305) 209-6985</div>
-                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>📧 info@precisioncleaning.com</div>
-                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>📍 Miami, FL</div>
+                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: COLORS.goldLight, display: "inline-flex" }}><Icon name="phone" size={15} /></span>
+                  (305) 209-6985
+                </div>
+                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: COLORS.goldLight, display: "inline-flex" }}><Icon name="mail" size={15} /></span>
+                  ethan@precisioncleaning.com
+                </div>
+                <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: COLORS.goldLight, display: "inline-flex" }}><Icon name="mapPin" size={15} /></span>
+                  Miami, FL
+                </div>
               </div>
             </div>
 
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-              <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+              <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
                 © 2026 Precision Cleaning Services. All rights reserved. Miami, FL.
               </div>
               <div style={{ display: "flex", gap: 24 }}>
                 {["Privacy Policy", "Terms of Service"].map((s) => (
-                  <span key={s} style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>{s}</span>
+                  <span key={s} className="footer-link" style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.55)", cursor: "pointer" }}>{s}</span>
                 ))}
               </div>
             </div>
