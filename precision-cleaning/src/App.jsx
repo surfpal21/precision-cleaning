@@ -58,6 +58,9 @@ const ICON_PATHS = {
   star: <><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" /></>,
   arrowRight: <><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>,
   chevronDown: <><path d="m6 9 6 6 6-6" /></>,
+  moveHorizontal: <><path d="m18 8 4 4-4 4" /><path d="M2 12h20" /><path d="m6 8-4 4 4 4" /></>,
+  droplet: <><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z" /></>,
+  clock: <><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></>,
 };
 
 function Icon({ name, size = 24, strokeWidth = 1.8, filled = false, style }) {
@@ -221,9 +224,28 @@ const SERVICE_DATA = {
   marine: {
     hero: {
       title: "Yacht Interiors,\nPerfected",
-      subtitle: "Expert marine cleaning for Miami's yachts, boats, and vessels",
-      tagline: "MARINE SERVICES",
+      subtitle: "Hot-water steam extraction that lifts salt, sunscreen and mildew — and returns a tired interior to showroom condition.",
+      tagline: "MARINE INTERIOR SPECIALISTS",
+      image: "/images/marine/hero-salon",
     },
+    pricing: {
+      startingAt: "$395",
+      scope: "Boats up to 68 ft",
+      note: "Vessels above 68 ft — custom pricing available",
+      image: "/images/marine/salon",
+      imageAlt: "Freshly cleaned yacht salon with ivory carpet and cream upholstery",
+    },
+    restores: ["Carpet steam extraction", "Yellowing & oxidation", "Salon & staterooms", "Vinyl & leather care", "Carpet trim & binding", "Cushions & seat covers", "Headliners & panels", "Stain, spot & odor removal"],
+    results: [
+      {
+        service: "Vinyl & Leather Care",
+        title: "Salon Leather Seating",
+        description: "Sun, salt and sunscreen turn white marine leather yellow and leave mildew spotting in the seams. Our low-moisture process lifts it out — and brings the carpet underneath back to life.",
+        work: ["Yellowing & oxidation reversed", "Sunscreen & body-oil stains lifted", "Mildew spotting treated at the source", "Carpet steam extracted & groomed"],
+        before: "/images/marine/leather-before",
+        after: "/images/marine/leather-after",
+      },
+    ],
     services: [
       {
         icon: "sofa",
@@ -292,6 +314,9 @@ const SERVICE_DATA = {
   },
 };
 
+// Tab order everywhere tabs are listed; the first tab is the landing tab
+const TABS = ["marine", "commercial", "residential"];
+
 const REVIEWS = [
   { text: "Called in the morning, they were at my door by 2pm. My carpets haven't looked this good since move-in day. Incredible turnaround.", author: "Maria L.", location: "Brickell", stars: 5 },
   { text: "We had tile and grout cleaned in our kitchen and bathrooms. The difference was night and day. Professional, on time, and very fair pricing.", author: "James & Carla T.", location: "Coral Gables", stars: 5 },
@@ -355,9 +380,53 @@ function FadeIn({ children, delay = 0, direction = "up", style = {} }) {
   );
 }
 
+// ─── Responsive srcSet for images exported as `${base}-${width}.jpg` ───
+const srcSet = (base, widths) => widths.map((w) => `${base}-${w}.jpg ${w}w`).join(", ");
+
+// ─── Before / After Slider ───
+function BeforeAfterSlider({ before, after, label }) {
+  const [position, setPosition] = useState(50);
+  const [touched, setTouched] = useState(false);
+  const ref = useRef(null);
+  const dragging = useRef(false);
+
+  const moveTo = (clientX) => {
+    const rect = ref.current.getBoundingClientRect();
+    setPosition(Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)));
+    setTouched(true);
+  };
+
+  const imgProps = { sizes: "(max-width: 900px) 100vw, 680px", loading: "lazy", decoding: "async", draggable: false };
+
+  return (
+    <div ref={ref} className="ba-slider"
+      onPointerDown={(e) => {
+        dragging.current = true;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        // Touch waits for a horizontal drag so a vertical page scroll doesn't jump the handle
+        if (e.pointerType === "mouse") moveTo(e.clientX);
+      }}
+      onPointerMove={(e) => { if (dragging.current) moveTo(e.clientX); }}
+      onPointerUp={() => { dragging.current = false; }}
+      onPointerCancel={() => { dragging.current = false; }}>
+      <img src={`${after}-1400.jpg`} srcSet={srcSet(after, [800, 1400])} alt={`${label} after cleaning`} {...imgProps} />
+      <img src={`${before}-1400.jpg`} srcSet={srcSet(before, [800, 1400])} alt={`${label} before cleaning`} {...imgProps}
+        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }} />
+      <span className="ba-label" style={{ left: 16, opacity: position > 15 ? 1 : 0 }}>Before</span>
+      <span className="ba-label" style={{ right: 16, opacity: position < 85 ? 1 : 0 }}>After</span>
+      <input type="range" min="0" max="100" value={Math.round(position)} className="ba-range"
+        aria-label={`Before and after comparison: ${label}`}
+        onChange={(e) => { setPosition(Number(e.target.value)); setTouched(true); }} />
+      <div className="ba-handle" style={{ left: `${position}%` }}>
+        <span className={`ba-knob ${touched ? "" : "hint"}`}><Icon name="moveHorizontal" size={20} strokeWidth={2} /></span>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main App ───
 export default function PrecisionCleaning() {
-  const [activeTab, setActiveTab] = useState("residential");
+  const [activeTab, setActiveTab] = useState(TABS[0]);
   const [showMaintenance, setShowMaintenance] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -459,7 +528,28 @@ export default function PrecisionCleaning() {
         .review-track:hover { animation-play-state: paused; }
         @keyframes scroll-reviews { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
+        .hero-image-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11, 29, 58, 0.96) 0%, rgba(11, 29, 58, 0.86) 40%, rgba(11, 29, 58, 0.45) 75%, rgba(11, 29, 58, 0.3) 100%); }
+
+        .ba-slider { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 12px; background: ${COLORS.navyLight}; cursor: ew-resize; user-select: none; -webkit-user-select: none; touch-action: pan-y; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45); }
+        .ba-slider img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+        .ba-label { position: absolute; top: 16px; padding: 7px 12px; border-radius: 4px; background: rgba(11, 29, 58, 0.75); color: ${COLORS.white}; font-family: ${FONT.body}; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: opacity 0.2s; pointer-events: none; }
+        .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: ${COLORS.white}; box-shadow: 0 0 14px rgba(0, 0, 0, 0.35); pointer-events: none; }
+        .ba-knob { position: absolute; top: 50%; left: 50%; width: 48px; height: 48px; transform: translate(-50%, -50%); border-radius: 50%; background: ${COLORS.gold}; color: ${COLORS.navy}; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
+        .ba-knob.hint { animation: ba-pulse 2s ease-out infinite; }
+        @keyframes ba-pulse { 0% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 0 rgba(196, 148, 61, 0.65); } 70%, 100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 18px rgba(196, 148, 61, 0); } }
+        .ba-range { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        .ba-range:focus-visible + .ba-handle .ba-knob { outline: 2px solid ${COLORS.white}; outline-offset: 3px; }
+
+        @media (max-width: 900px) {
+          .showcase-row, .pricing-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .showcase-row > * { order: 0 !important; }
+          .price-card { position: relative !important; right: auto !important; bottom: auto !important; margin: -64px 16px 0; }
+        }
+
         @media (max-width: 768px) {
+          .hero-image-overlay { background: linear-gradient(180deg, rgba(11, 29, 58, 0.78) 0%, rgba(11, 29, 58, 0.9) 55%, rgba(11, 29, 58, 0.97) 100%); }
+          .restore-grid { grid-template-columns: 1fr !important; }
+          .hero-price { gap: 14px !important; padding: 12px 16px !important; }
           .hide-mobile { display: none !important; }
           .show-mobile { display: block !important; }
           .hero-title { font-size: 36px !important; }
@@ -500,7 +590,7 @@ export default function PrecisionCleaning() {
 
             {/* Desktop Nav */}
             <div className="nav-desktop" style={{ display: "flex", alignItems: "center", gap: 32 }}>
-              {["residential", "commercial", "marine"].map((tab) => (
+              {TABS.map((tab) => (
                 <span key={tab} className={`nav-tab ${activeTab === tab && !showMaintenance ? "active" : ""}`}
                   onClick={() => switchTab(tab)}
                   style={{ color: activeTab === tab && !showMaintenance ? COLORS.gold : "rgba(255,255,255,0.75)", fontSize: 13, textTransform: "uppercase", letterSpacing: 1.5 }}>
@@ -530,7 +620,7 @@ export default function PrecisionCleaning() {
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="mobile-menu" style={{ background: COLORS.navy, padding: "16px 24px 24px", borderTop: `1px solid rgba(255,255,255,0.08)` }}>
-              {["residential", "commercial", "marine"].map((tab) => (
+              {TABS.map((tab) => (
                 <div key={tab} onClick={() => switchTab(tab)}
                   style={{ padding: "12px 0", color: activeTab === tab ? COLORS.gold : "rgba(255,255,255,0.7)", fontSize: 14, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer", fontWeight: 500 }}>
                   {tab}
@@ -551,6 +641,15 @@ export default function PrecisionCleaning() {
           background: `linear-gradient(135deg, ${COLORS.navy} 0%, ${COLORS.navyLight} 50%, ${COLORS.navyMid} 100%)`,
           overflow: "hidden",
         }}>
+          {data.hero.image && (
+            <>
+              <img src={`${data.hero.image}-2000.jpg`} srcSet={srcSet(data.hero.image, [1000, 2000])} sizes="100vw" alt=""
+                fetchPriority="high" decoding="async"
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "70% center" }} />
+              <div className="hero-image-overlay" />
+            </>
+          )}
+
           {/* Decorative elements */}
           <div style={{ position: "absolute", top: "10%", right: "-5%", width: "min(400px, 50vw)", height: "min(400px, 50vw)", borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.08)` }} />
           <div style={{ position: "absolute", top: "20%", right: "5%", width: "min(250px, 35vw)", height: "min(250px, 35vw)", borderRadius: "50%", border: `1px solid rgba(196, 148, 61, 0.05)` }} />
@@ -583,6 +682,29 @@ export default function PrecisionCleaning() {
                 {data.hero.subtitle}
               </p>
             </FadeIn>
+
+            {data.pricing && (
+              <FadeIn delay={0.25}>
+                <div className="hero-price" style={{
+                  display: "inline-flex", alignItems: "center", gap: 20, padding: "14px 24px", marginBottom: 36,
+                  background: "rgba(11, 29, 58, 0.6)", border: "1px solid rgba(196, 148, 61, 0.45)", borderRadius: 8,
+                  backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+                }}>
+                  <div>
+                    <div style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.goldLight, letterSpacing: 2, textTransform: "uppercase", whiteSpace: "nowrap" }}>Starting at</div>
+                    <div style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.white, lineHeight: 1.1 }}>{data.pricing.startingAt}</div>
+                  </div>
+                  <div style={{ width: 1, alignSelf: "stretch", background: "rgba(255,255,255,0.18)" }} />
+                  <div style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.75)", lineHeight: 1.7 }}>
+                    <div style={{ fontWeight: 600, color: COLORS.white }}>{data.pricing.scope}</div>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
+                      <span style={{ color: COLORS.goldLight, display: "inline-flex", marginTop: 5 }}><Icon name="anchor" size={14} strokeWidth={2} /></span>
+                      Dockside service at your slip
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            )}
 
             <FadeIn delay={0.3}>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -645,7 +767,7 @@ export default function PrecisionCleaning() {
         {/* ─── TAB SELECTOR BAR ─── */}
         <section style={{ background: COLORS.white, borderBottom: `1px solid ${COLORS.gray200}`, position: "sticky", top: 100, zIndex: 100, overflowX: "hidden" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            {["residential", "commercial", "marine"].map((tab) => (
+            {TABS.map((tab) => (
               <button key={tab} onClick={() => switchTab(tab)} style={{
                 padding: "16px 28px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
                 textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer",
@@ -674,6 +796,139 @@ export default function PrecisionCleaning() {
             </button>
           </div>
         </section>
+
+        {/* ─── BEFORE / AFTER SHOWCASE (tabs with results data) ─── */}
+        {!showMaintenance && data.results && (
+          <section style={{ background: COLORS.navy, padding: "80px 0", overflow: "hidden" }}>
+            <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
+              <FadeIn>
+                <div style={{ textAlign: "center", marginBottom: 60 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                    <div style={{ width: 30, height: 1, background: COLORS.gold }} />
+                    <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>Before &amp; After</span>
+                    <div style={{ width: 30, height: 1, background: COLORS.gold }} />
+                  </div>
+                  <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 42, fontWeight: 700, color: COLORS.white, lineHeight: 1.15 }}>
+                    See the Difference
+                  </h2>
+                  <p style={{ fontFamily: FONT.accent, fontSize: 19, color: "rgba(255,255,255,0.6)", marginTop: 14, fontStyle: "italic" }}>
+                    Drag the slider to see what a professional deep clean does for a yacht interior
+                  </p>
+                </div>
+              </FadeIn>
+
+              {data.results.map((result, i) => (
+                <div key={result.title} className="showcase-row" style={{
+                  display: "grid", gridTemplateColumns: i % 2 ? "2fr 3fr" : "3fr 2fr", gap: 56, alignItems: "center",
+                  marginBottom: i < data.results.length - 1 ? 80 : 0,
+                }}>
+                  <FadeIn direction="right" style={{ order: i % 2 ? 2 : 0 }}>
+                    <BeforeAfterSlider before={result.before} after={result.after} label={result.title} />
+                  </FadeIn>
+                  <FadeIn delay={0.15} direction="left">
+                    <div style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 12 }}>
+                      {result.service}
+                    </div>
+                    <h3 style={{ fontFamily: FONT.display, fontSize: 32, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, marginBottom: 16 }}>
+                      {result.title}
+                    </h3>
+                    <p style={{ fontFamily: FONT.body, fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.75, marginBottom: 24 }}>
+                      {result.description}
+                    </p>
+                    {result.work.map((item) => (
+                      <div key={item} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                        <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(196, 148, 61, 0.15)", color: COLORS.goldLight, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Icon name="check" size={13} strokeWidth={3} />
+                        </span>
+                        <span style={{ fontFamily: FONT.body, fontSize: 15, color: "rgba(255,255,255,0.88)" }}>{item}</span>
+                      </div>
+                    ))}
+                  </FadeIn>
+                </div>
+              ))}
+
+              <FadeIn delay={0.2}>
+                <div style={{ textAlign: "center", marginTop: 64 }}>
+                  <a href="tel:3052096985" className="gold-btn" style={{ fontSize: "clamp(13px, 3vw, 16px)", padding: "14px clamp(16px, 4vw, 44px)", whiteSpace: "nowrap", maxWidth: "100%", boxSizing: "border-box" }}>
+                    Get Results Like These — (305) 209-6985
+                  </a>
+                  <p style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 20 }}>
+                    Images shown are representative examples.
+                  </p>
+                </div>
+              </FadeIn>
+            </div>
+          </section>
+        )}
+
+        {/* ─── STARTING PRICE & WHAT WE RESTORE (tabs with pricing data) ─── */}
+        {!showMaintenance && data.pricing && (
+          <section style={{ background: COLORS.white, padding: "96px 0", overflow: "hidden" }}>
+            <div className="pricing-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }}>
+              <FadeIn direction="right">
+                <div style={{ position: "relative" }}>
+                  <img src={`${data.pricing.image}-1400.jpg`} srcSet={srcSet(data.pricing.image, [800, 1400])} sizes="(max-width: 900px) 100vw, 560px"
+                    alt={data.pricing.imageAlt} loading="lazy" decoding="async"
+                    style={{ width: "100%", aspectRatio: "4 / 3", objectFit: "cover", display: "block", borderRadius: 12, boxShadow: "0 24px 60px rgba(11, 29, 58, 0.18)" }} />
+                  <div className="price-card" style={{
+                    position: "absolute", right: -28, bottom: -36, background: COLORS.navy, borderTop: `3px solid ${COLORS.gold}`,
+                    borderRadius: 12, padding: "24px 32px", boxShadow: "0 24px 60px rgba(11, 29, 58, 0.35)",
+                  }}>
+                    <div style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, color: COLORS.goldLight, letterSpacing: 2.5, textTransform: "uppercase" }}>
+                      {data.pricing.scope}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 6 }}>
+                      <span style={{ fontFamily: FONT.body, fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.65)", letterSpacing: 1.5, textTransform: "uppercase" }}>Starting at</span>
+                      <span style={{ fontFamily: FONT.display, fontSize: 56, fontWeight: 700, color: COLORS.white, lineHeight: 1 }}>{data.pricing.startingAt}</span>
+                    </div>
+                    <div style={{ fontFamily: FONT.body, fontSize: 13, color: "rgba(255,255,255,0.65)", marginTop: 10 }}>
+                      {data.pricing.note}
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+
+              <FadeIn delay={0.15} direction="left">
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                  <div style={{ width: 30, height: 1, background: COLORS.gold }} />
+                  <span style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase" }}>What We Restore</span>
+                </div>
+                <h2 className="section-h2" style={{ fontFamily: FONT.display, fontSize: 40, fontWeight: 700, color: COLORS.navy, lineHeight: 1.2 }}>
+                  Showroom Condition,<br />Right at Your Slip
+                </h2>
+                <p style={{ fontFamily: FONT.accent, fontSize: 19, color: COLORS.gray600, fontStyle: "italic", lineHeight: 1.6, marginTop: 14 }}>
+                  Dockside service at your slip — low-moisture methods and fast dry times get you back aboard quickly.
+                </p>
+                <div className="restore-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 24px", margin: "32px 0" }}>
+                  {data.restores.map((item) => (
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ width: 22, height: 22, borderRadius: "50%", background: COLORS.goldPale, color: COLORS.goldDark, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Icon name="check" size={12} strokeWidth={3} />
+                      </span>
+                      <span style={{ fontFamily: FONT.body, fontSize: 15, fontWeight: 500, color: COLORS.navy }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 24, borderTop: `1px solid ${COLORS.gray200}`, marginBottom: 32 }}>
+                  {[
+                    { icon: "droplet", label: "Low-Moisture" },
+                    { icon: "clock", label: "Fast Dry Times" },
+                    { icon: "leaf", label: "Marine-Safe Products" },
+                  ].map((badge) => (
+                    <span key={badge.label} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 999, background: COLORS.cream, border: `1px solid ${COLORS.gray200}`, color: COLORS.navy }}>
+                      <span style={{ color: COLORS.goldDark, display: "inline-flex" }}><Icon name={badge.icon} size={15} strokeWidth={2} /></span>
+                      <span style={{ fontFamily: FONT.body, fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>{badge.label}</span>
+                    </span>
+                  ))}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+                  <a href="tel:3052096985" className="gold-btn">Call (305) 209-6985</a>
+                  <span style={{ fontFamily: FONT.body, fontSize: 14, color: COLORS.gray600 }}>Free estimates</span>
+                </div>
+              </FadeIn>
+            </div>
+          </section>
+        )}
 
         {/* ─── SERVICES SECTION ─── */}
         {!showMaintenance && (
@@ -836,7 +1091,7 @@ export default function PrecisionCleaning() {
 
               {/* Plan selector tabs */}
               <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginBottom: 48 }}>
-                {["residential", "commercial", "marine"].map((tab) => (
+                {TABS.map((tab) => (
                   <button key={tab} className="plan-pill" onClick={() => setActiveTab(tab)} style={{
                     padding: "10px 24px", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
                     background: activeTab === tab ? COLORS.navy : COLORS.white,
@@ -1047,7 +1302,7 @@ export default function PrecisionCleaning() {
               {/* Services */}
               <div>
                 <h4 style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Services</h4>
-                {["Residential", "Commercial", "Marine"].map((s) => (
+                {["Marine", "Commercial", "Residential"].map((s) => (
                   <div key={s} className="footer-link" style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.65)", marginBottom: 10, cursor: "pointer" }}
                     onClick={() => switchTab(s.toLowerCase())}>{s}</div>
                 ))}
