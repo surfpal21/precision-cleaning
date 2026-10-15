@@ -897,9 +897,6 @@ export default function PrecisionCleaning() {
                   <a href="tel:3052096985" className="gold-btn" style={{ fontSize: "clamp(13px, 3vw, 16px)", padding: "14px clamp(16px, 4vw, 44px)", whiteSpace: "nowrap", maxWidth: "100%", boxSizing: "border-box" }}>
                     Get Results Like These — (305) 209-6985
                   </a>
-                  <p style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 20 }}>
-                    Images shown are representative examples.
-                  </p>
                 </div>
               </FadeIn>
             </div>
