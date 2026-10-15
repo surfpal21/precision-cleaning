@@ -58,7 +58,6 @@ const ICON_PATHS = {
   star: <><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" /></>,
   arrowRight: <><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>,
   chevronDown: <><path d="m6 9 6 6 6-6" /></>,
-  moveHorizontal: <><path d="m18 8 4 4-4 4" /><path d="M2 12h20" /><path d="m6 8-4 4 4 4" /></>,
   droplet: <><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z" /></>,
   clock: <><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></>,
 };
@@ -236,16 +235,6 @@ const SERVICE_DATA = {
       imageAlt: "Freshly cleaned yacht salon with ivory carpet and cream upholstery",
     },
     restores: ["Carpet steam extraction", "Yellowing & oxidation", "Salon & staterooms", "Vinyl & leather care", "Carpet trim & binding", "Cushions & seat covers", "Headliners & panels", "Stain, spot & odor removal"],
-    results: [
-      {
-        service: "Vinyl & Leather Care",
-        title: "Salon Leather Seating",
-        description: "Sun, salt and sunscreen turn white marine leather yellow and leave mildew spotting in the seams. Our low-moisture process lifts it out — and brings the carpet underneath back to life.",
-        work: ["Yellowing & oxidation reversed", "Sunscreen & body-oil stains lifted", "Mildew spotting treated at the source", "Carpet steam extracted & groomed"],
-        before: "/images/marine/leather-before",
-        after: "/images/marine/leather-after",
-      },
-    ],
     gallery: [
       { image: "/images/marine/carpet-salon", title: "Salon Carpet", caption: "Traffic lanes & ground-in soiling lifted", alt: "Yacht salon carpet before and after steam extraction" },
       { image: "/images/marine/carpet-stairs", title: "Companionway Stairs", caption: "Every tread deep cleaned, walls masked & protected", alt: "Yacht companionway stair carpet before and after cleaning" },
@@ -390,47 +379,6 @@ function FadeIn({ children, delay = 0, direction = "up", style = {} }) {
 // ─── Responsive srcSet for images exported as `${base}-${width}.jpg` ───
 const srcSet = (base, widths) => widths.map((w) => `${base}-${w}.jpg ${w}w`).join(", ");
 
-// ─── Before / After Slider ───
-function BeforeAfterSlider({ before, after, label }) {
-  const [position, setPosition] = useState(50);
-  const [touched, setTouched] = useState(false);
-  const ref = useRef(null);
-  const dragging = useRef(false);
-
-  const moveTo = (clientX) => {
-    const rect = ref.current.getBoundingClientRect();
-    setPosition(Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)));
-    setTouched(true);
-  };
-
-  const imgProps = { sizes: "(max-width: 900px) 100vw, 680px", loading: "lazy", decoding: "async", draggable: false };
-
-  return (
-    <div ref={ref} className="ba-slider"
-      onPointerDown={(e) => {
-        dragging.current = true;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        // Touch waits for a horizontal drag so a vertical page scroll doesn't jump the handle
-        if (e.pointerType === "mouse") moveTo(e.clientX);
-      }}
-      onPointerMove={(e) => { if (dragging.current) moveTo(e.clientX); }}
-      onPointerUp={() => { dragging.current = false; }}
-      onPointerCancel={() => { dragging.current = false; }}>
-      <img src={`${after}-1400.jpg`} srcSet={srcSet(after, [800, 1400])} alt={`${label} after cleaning`} {...imgProps} />
-      <img src={`${before}-1400.jpg`} srcSet={srcSet(before, [800, 1400])} alt={`${label} before cleaning`} {...imgProps}
-        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }} />
-      <span className="ba-label" style={{ left: 16, opacity: position > 15 ? 1 : 0 }}>Before</span>
-      <span className="ba-label" style={{ right: 16, opacity: position < 85 ? 1 : 0 }}>After</span>
-      <input type="range" min="0" max="100" value={Math.round(position)} className="ba-range"
-        aria-label={`Before and after comparison: ${label}`}
-        onChange={(e) => { setPosition(Number(e.target.value)); setTouched(true); }} />
-      <div className="ba-handle" style={{ left: `${position}%` }}>
-        <span className={`ba-knob ${touched ? "" : "hint"}`}><Icon name="moveHorizontal" size={20} strokeWidth={2} /></span>
-      </div>
-    </div>
-  );
-}
-
 // ─── Main App ───
 export default function PrecisionCleaning() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
@@ -537,20 +485,9 @@ export default function PrecisionCleaning() {
 
         .hero-image-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11, 29, 58, 0.96) 0%, rgba(11, 29, 58, 0.86) 40%, rgba(11, 29, 58, 0.45) 75%, rgba(11, 29, 58, 0.3) 100%); }
 
-        .ba-slider { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 12px; background: ${COLORS.navyLight}; cursor: ew-resize; user-select: none; -webkit-user-select: none; touch-action: pan-y; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45); }
-        .ba-slider img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-        .ba-label { position: absolute; top: 16px; padding: 7px 12px; border-radius: 4px; background: rgba(11, 29, 58, 0.75); color: ${COLORS.white}; font-family: ${FONT.body}; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: opacity 0.2s; pointer-events: none; }
-        .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: ${COLORS.white}; box-shadow: 0 0 14px rgba(0, 0, 0, 0.35); pointer-events: none; }
-        .ba-knob { position: absolute; top: 50%; left: 50%; width: 48px; height: 48px; transform: translate(-50%, -50%); border-radius: 50%; background: ${COLORS.gold}; color: ${COLORS.navy}; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
-        .ba-knob.hint { animation: ba-pulse 2s ease-out infinite; }
-        @keyframes ba-pulse { 0% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 0 rgba(196, 148, 61, 0.65); } 70%, 100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 18px rgba(196, 148, 61, 0); } }
-        .ba-range { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-        .ba-range:focus-visible + .ba-handle .ba-knob { outline: 2px solid ${COLORS.white}; outline-offset: 3px; }
-
         @media (max-width: 900px) {
-          .showcase-row, .pricing-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .pricing-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
           .gallery-grid > * { flex-basis: 100% !important; }
-          .showcase-row > * { order: 0 !important; }
           .price-card { position: relative !important; right: auto !important; bottom: auto !important; margin: -64px 16px 0; }
         }
 
@@ -805,8 +742,8 @@ export default function PrecisionCleaning() {
           </div>
         </section>
 
-        {/* ─── BEFORE / AFTER SHOWCASE (tabs with results data) ─── */}
-        {!showMaintenance && data.results && (
+        {/* ─── BEFORE / AFTER GALLERY (tabs with gallery data) ─── */}
+        {!showMaintenance && data.gallery && (
           <section style={{ background: COLORS.navy, padding: "80px 0", overflow: "hidden" }}>
             <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
               <FadeIn>
@@ -820,77 +757,33 @@ export default function PrecisionCleaning() {
                     See the Difference
                   </h2>
                   <p style={{ fontFamily: FONT.accent, fontSize: 19, color: "rgba(255,255,255,0.6)", marginTop: 14, fontStyle: "italic" }}>
-                    Drag the slider to see what a professional deep clean does for a yacht interior
+                    Actual before &amp; after photos from our recent yacht jobs
                   </p>
                 </div>
               </FadeIn>
 
-              {data.results.map((result, i) => (
-                <div key={result.title} className="showcase-row" style={{
-                  display: "grid", gridTemplateColumns: i % 2 ? "2fr 3fr" : "3fr 2fr", gap: 56, alignItems: "center",
-                  marginBottom: i < data.results.length - 1 ? 80 : 0,
-                }}>
-                  <FadeIn direction="right" style={{ order: i % 2 ? 2 : 0 }}>
-                    <BeforeAfterSlider before={result.before} after={result.after} label={result.title} />
-                  </FadeIn>
-                  <FadeIn delay={0.15} direction="left">
-                    <div style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 12 }}>
-                      {result.service}
-                    </div>
-                    <h3 style={{ fontFamily: FONT.display, fontSize: 32, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, marginBottom: 16 }}>
-                      {result.title}
-                    </h3>
-                    <p style={{ fontFamily: FONT.body, fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.75, marginBottom: 24 }}>
-                      {result.description}
-                    </p>
-                    {result.work.map((item) => (
-                      <div key={item} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                        <span style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(196, 148, 61, 0.15)", color: COLORS.goldLight, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Icon name="check" size={13} strokeWidth={3} />
-                        </span>
-                        <span style={{ fontFamily: FONT.body, fontSize: 15, color: "rgba(255,255,255,0.88)" }}>{item}</span>
+              {/* Flex rather than grid so a short last row sits centred */}
+              <div className="gallery-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
+                {data.gallery.map((item, i) => (
+                  <FadeIn key={item.image} delay={(i % 3) * 0.1} style={{ flex: "0 1 calc((100% - 48px) / 3)" }}>
+                    <div style={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", boxShadow: "0 16px 48px rgba(0,0,0,0.4)" }}>
+                      <img
+                        src={`${item.image}-1400.jpg`}
+                        srcSet={srcSet(item.image, [800, 1400])}
+                        sizes="(max-width: 900px) 100vw, 368px"
+                        width={1400} height={922}
+                        alt={item.alt}
+                        loading="lazy" decoding="async"
+                        style={{ width: "100%", height: "auto", display: "block" }}
+                      />
+                      <div style={{ flex: 1, background: COLORS.navyLight, padding: "16px 24px" }}>
+                        <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.white }}>{item.title}</div>
+                        <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>{item.caption}</div>
                       </div>
-                    ))}
-                  </FadeIn>
-                </div>
-              ))}
-
-              {data.gallery && (
-                <div style={{ marginTop: 96 }}>
-                  <FadeIn>
-                    <div style={{ textAlign: "center", marginBottom: 32 }}>
-                      <div style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 12 }}>
-                        Yacht Carpet Cleaning
-                      </div>
-                      <h3 style={{ fontFamily: FONT.display, fontSize: 32, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, margin: 0 }}>
-                        Recent Jobs
-                      </h3>
                     </div>
                   </FadeIn>
-                  {/* Flex rather than grid so a short last row sits centred */}
-                  <div className="gallery-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
-                    {data.gallery.map((item, i) => (
-                      <FadeIn key={item.image} delay={(i % 3) * 0.1} style={{ flex: "0 1 calc((100% - 48px) / 3)" }}>
-                        <div style={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", boxShadow: "0 16px 48px rgba(0,0,0,0.4)" }}>
-                          <img
-                            src={`${item.image}-1400.jpg`}
-                            srcSet={srcSet(item.image, [800, 1400])}
-                            sizes="(max-width: 900px) 100vw, 368px"
-                            width={1400} height={922}
-                            alt={item.alt}
-                            loading="lazy" decoding="async"
-                            style={{ width: "100%", height: "auto", display: "block" }}
-                          />
-                          <div style={{ flex: 1, background: COLORS.navyLight, padding: "16px 24px" }}>
-                            <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.white }}>{item.title}</div>
-                            <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>{item.caption}</div>
-                          </div>
-                        </div>
-                      </FadeIn>
-                    ))}
-                  </div>
-                </div>
-              )}
+                ))}
+              </div>
 
               <FadeIn delay={0.2}>
                 <div style={{ textAlign: "center", marginTop: 64 }}>
