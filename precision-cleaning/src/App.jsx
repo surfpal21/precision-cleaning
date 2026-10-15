@@ -246,6 +246,11 @@ const SERVICE_DATA = {
         after: "/images/marine/leather-after",
       },
     ],
+    gallery: [
+      { image: "/images/marine/carpet-salon", title: "Salon Carpet", caption: "Traffic lanes & ground-in soiling lifted", alt: "Yacht salon carpet before and after steam extraction" },
+      { image: "/images/marine/carpet-stairs", title: "Companionway Stairs", caption: "Every tread deep cleaned, walls masked & protected", alt: "Yacht companionway stair carpet before and after cleaning" },
+      { image: "/images/marine/carpet-passage", title: "Passageway Carpet", caption: "Heavy soiling & spotting extracted", alt: "Yacht passageway carpet before and after steam extraction" },
+    ],
     services: [
       {
         icon: "sofa",
@@ -542,6 +547,7 @@ export default function PrecisionCleaning() {
 
         @media (max-width: 900px) {
           .showcase-row, .pricing-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .gallery-grid { grid-template-columns: 1fr !important; }
           .showcase-row > * { order: 0 !important; }
           .price-card { position: relative !important; right: auto !important; bottom: auto !important; margin: -64px 16px 0; }
         }
@@ -846,6 +852,42 @@ export default function PrecisionCleaning() {
                   </FadeIn>
                 </div>
               ))}
+
+              {data.gallery && (
+                <div style={{ marginTop: 96 }}>
+                  <FadeIn>
+                    <div style={{ textAlign: "center", marginBottom: 32 }}>
+                      <div style={{ fontFamily: FONT.body, fontSize: 12, fontWeight: 600, color: COLORS.gold, letterSpacing: 3, textTransform: "uppercase", marginBottom: 12 }}>
+                        Yacht Carpet Cleaning
+                      </div>
+                      <h3 style={{ fontFamily: FONT.display, fontSize: 32, fontWeight: 700, color: COLORS.white, lineHeight: 1.2, margin: 0 }}>
+                        Recent Jobs
+                      </h3>
+                    </div>
+                  </FadeIn>
+                  <div className="gallery-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, alignItems: "stretch" }}>
+                    {data.gallery.map((item, i) => (
+                      <FadeIn key={item.image} delay={i * 0.1} style={{ height: "100%" }}>
+                        <div style={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", boxShadow: "0 16px 48px rgba(0,0,0,0.4)" }}>
+                          <img
+                            src={`${item.image}-1400.jpg`}
+                            srcSet={srcSet(item.image, [800, 1400])}
+                            sizes="(max-width: 900px) 100vw, 368px"
+                            width={1400} height={928}
+                            alt={item.alt}
+                            loading="lazy" decoding="async"
+                            style={{ width: "100%", height: "auto", display: "block" }}
+                          />
+                          <div style={{ flex: 1, background: COLORS.navyLight, padding: "16px 24px" }}>
+                            <div style={{ fontFamily: FONT.display, fontSize: 20, fontWeight: 600, color: COLORS.white }}>{item.title}</div>
+                            <div style={{ fontFamily: FONT.body, fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>{item.caption}</div>
+                          </div>
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <FadeIn delay={0.2}>
                 <div style={{ textAlign: "center", marginTop: 64 }}>
