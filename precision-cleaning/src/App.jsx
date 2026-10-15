@@ -250,6 +250,8 @@ const SERVICE_DATA = {
       { image: "/images/marine/carpet-salon", title: "Salon Carpet", caption: "Traffic lanes & ground-in soiling lifted", alt: "Yacht salon carpet before and after steam extraction" },
       { image: "/images/marine/carpet-stairs", title: "Companionway Stairs", caption: "Every tread deep cleaned, walls masked & protected", alt: "Yacht companionway stair carpet before and after cleaning" },
       { image: "/images/marine/carpet-passage", title: "Passageway Carpet", caption: "Heavy soiling & spotting extracted", alt: "Yacht passageway carpet before and after steam extraction" },
+      { image: "/images/marine/carpet-staircase", title: "Interior Staircase", caption: "Traffic soiling lifted & pile restored on every step", alt: "Yacht interior staircase carpet before and after cleaning" },
+      { image: "/images/marine/carpet-water-stain", title: "Water Stain Removal", caption: "Brown water staining lifted from light carpet", alt: "Light yacht carpet with brown water stains before and after cleaning" },
     ],
     services: [
       {
@@ -547,7 +549,7 @@ export default function PrecisionCleaning() {
 
         @media (max-width: 900px) {
           .showcase-row, .pricing-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .gallery-grid { grid-template-columns: 1fr !important; }
+          .gallery-grid > * { flex-basis: 100% !important; }
           .showcase-row > * { order: 0 !important; }
           .price-card { position: relative !important; right: auto !important; bottom: auto !important; margin: -64px 16px 0; }
         }
@@ -865,15 +867,16 @@ export default function PrecisionCleaning() {
                       </h3>
                     </div>
                   </FadeIn>
-                  <div className="gallery-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, alignItems: "stretch" }}>
+                  {/* Flex rather than grid so a short last row sits centred */}
+                  <div className="gallery-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
                     {data.gallery.map((item, i) => (
-                      <FadeIn key={item.image} delay={i * 0.1} style={{ height: "100%" }}>
+                      <FadeIn key={item.image} delay={(i % 3) * 0.1} style={{ flex: "0 1 calc((100% - 48px) / 3)" }}>
                         <div style={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", boxShadow: "0 16px 48px rgba(0,0,0,0.4)" }}>
                           <img
                             src={`${item.image}-1400.jpg`}
                             srcSet={srcSet(item.image, [800, 1400])}
                             sizes="(max-width: 900px) 100vw, 368px"
-                            width={1400} height={928}
+                            width={1400} height={922}
                             alt={item.alt}
                             loading="lazy" decoding="async"
                             style={{ width: "100%", height: "auto", display: "block" }}
