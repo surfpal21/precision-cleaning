@@ -672,15 +672,15 @@ export default function PrecisionCleaning() {
               }}>
                 {(activeTab === "residential" ? [
                   { num: 500, suffix: "+", label: "Homes Cleaned" },
-                  { num: 15, suffix: "+", label: "Years Experience" },
+                  { num: 3, suffix: "+", label: "Years Experience" },
                   { num: 100, suffix: "%", label: "Satisfaction Rate" },
                 ] : activeTab === "commercial" ? [
                   { num: 300, suffix: "+", label: "Businesses Served" },
-                  { num: 15, suffix: "+", label: "Years Experience" },
+                  { num: 3, suffix: "+", label: "Years Experience" },
                   { num: 100, suffix: "%", label: "Satisfaction Rate" },
                 ] : [
                   { num: 200, suffix: "+", label: "Vessels Cleaned" },
-                  { num: 15, suffix: "+", label: "Years Experience" },
+                  { num: 3, suffix: "+", label: "Years Experience" },
                   { num: 100, suffix: "%", label: "Satisfaction Rate" },
                 ]).map((stat, i) => (
                   <React.Fragment key={i}>
@@ -765,12 +765,12 @@ export default function PrecisionCleaning() {
               {/* Flex rather than grid so a short last row sits centred */}
               <div className="gallery-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
                 {data.gallery.map((item, i) => (
-                  <FadeIn key={item.image} delay={(i % 3) * 0.1} style={{ flex: "0 1 calc((100% - 48px) / 3)" }}>
+                  <FadeIn key={item.image} delay={(i % 2) * 0.1} style={{ flex: "0 1 calc((100% - 24px) / 2)" }}>
                     <div style={{ height: "100%", display: "flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", boxShadow: "0 16px 48px rgba(0,0,0,0.4)" }}>
                       <img
                         src={`${item.image}-1400.jpg`}
                         srcSet={srcSet(item.image, [800, 1400])}
-                        sizes="(max-width: 900px) 100vw, 368px"
+                        sizes="(max-width: 900px) 100vw, 576px"
                         width={1400} height={922}
                         alt={item.alt}
                         loading="lazy" decoding="async"
@@ -1220,7 +1220,7 @@ export default function PrecisionCleaning() {
                   <img src={logoImg} alt="Precision Cleaning Services" style={{ height: 68, width: "auto" }} />
                 </div>
                 <p style={{ fontFamily: FONT.body, fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 300 }}>
-                  Family-owned and locally operated, delivering same-day deep cleaning across Miami since 2011.
+                  Family-owned and locally operated, delivering same-day deep cleaning across Miami since 2023.
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginTop: 20, color: "rgba(255,255,255,0.6)" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
