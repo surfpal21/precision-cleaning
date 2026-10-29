@@ -228,7 +228,7 @@ const SERVICE_DATA = {
       image: "/images/marine/hero-salon",
     },
     pricing: {
-      startingAt: "$395",
+      startingAt: "$495",
       scope: "Boats up to 68 ft",
       note: "Vessels above 68 ft — custom pricing available",
       image: "/images/marine/salon",
