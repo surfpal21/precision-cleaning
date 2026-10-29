@@ -229,8 +229,8 @@ const SERVICE_DATA = {
     },
     pricing: {
       startingAt: "$495",
-      scope: "Boats up to 68 ft",
-      note: "Vessels above 68 ft — custom pricing available",
+      scope: "Boats up to 65 ft",
+      note: "Vessels above 65 ft — custom pricing available",
       image: "/images/marine/salon",
       imageAlt: "Freshly cleaned yacht salon with ivory carpet and cream upholstery",
     },
